@@ -15,6 +15,7 @@ namespace PlaceOrder
         }
 
         [Function("PlaceOrder")]
+        [QueueOutput("placed-orders")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
