@@ -1,25 +1,38 @@
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Functions.Worker.Http;
+using System.Net;
+using System.Text.Json;
+using PlaceOrder.DTO;
 
 namespace PlaceOrder
 {
     public class PlaceOrder
     {
-        private readonly ILogger<PlaceOrder> _logger;
-
-        public PlaceOrder(ILogger<PlaceOrder> logger)
-        {
-            _logger = logger;
-        }
-
         [Function("PlaceOrder")]
         [QueueOutput("placed-orders")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+        public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-            return new OkObjectResult("Welcome to Azure Functions!");
+            OrderItem? data = null;
+            HttpResponseData response;
+
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            try
+            {
+                data = JsonSerializer.Deserialize<OrderItem>(requestBody);
+                response = req.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception)
+            {
+                response = req.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return new OrderResponse()
+            {
+                Messages = [data != null ? JsonSerializer.Serialize(data) : "Invalid data"],
+                HttpResponse = response
+            };
         }
     }
 }
