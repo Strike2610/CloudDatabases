@@ -1,4 +1,4 @@
-﻿namespace PlaceOrder.UserFacing {
+﻿namespace PlaceOrder {
     public class OrderItem {
         public int Product { get; set; }
         public required string Customer { get; set; }
