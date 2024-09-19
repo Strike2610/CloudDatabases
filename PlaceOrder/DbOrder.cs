@@ -1,10 +1,8 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 
-namespace PlaceOrder.DTO
-{
-    public record DbOrder : ITableEntity
-    {
+namespace PlaceOrder {
+    public record DbOrder : ITableEntity {
         public string PartitionKey { get; set; }
         public string RowKey { get; set; }
         public DateTimeOffset? Timestamp { get; set; }

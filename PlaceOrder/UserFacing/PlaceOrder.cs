@@ -5,31 +5,24 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using System.Text.Json;
-using PlaceOrder.DTO;
+using Microsoft.Extensions.Logging;
 
-namespace PlaceOrder
-{
-    public class PlaceOrder
-    {
+namespace PlaceOrder.UserFacing {
+    public class PlaceOrder {
         [Function("PlaceOrder")]
-        [QueueOutput("placed-orders")]
-        public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
-        {
+        public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context) {
+            var logger = context.GetLogger("PlaceOrder");
             OrderItem? data = null;
             HttpResponseData response;
 
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            try
-            {
+            response = req.CreateResponse(HttpStatusCode.OK);
+            try {
                 data = JsonSerializer.Deserialize<OrderItem>(requestBody);
-                response = req.CreateResponse(HttpStatusCode.OK);
-            }
-            catch (Exception)
-            {
+            } catch(Exception) {
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
             }
-            return new OrderResponse()
-            {
+            return new OrderResponse() {
                 Messages = [data != null ? JsonSerializer.Serialize(data) : "Invalid data"],
                 HttpResponse = response
             };
