@@ -7,22 +7,23 @@ using System.Text.Json;
 namespace PlaceOrder.UserFacing {
     public class PlaceOrder {
         [Function(nameof(PlaceOrder))]
-        public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context) {
+        public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/place")] HttpRequestData req, FunctionContext context) {
             var logger = context.GetLogger(nameof(PlaceOrder));
-            OrderItem? data = null;
+            OrderItem? orderJson = null;
             HttpResponseData response;
 
-            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            response = req.CreateResponse(HttpStatusCode.OK);
+            var orderData = await new StreamReader(req.Body).ReadToEndAsync();
             try {
-                data = JsonSerializer.Deserialize<OrderItem>(requestBody);
+                orderJson = JsonSerializer.Deserialize<OrderItem>(orderData);
+                response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteAsJsonAsync(orderJson);
             } catch(Exception e) {
                 logger.LogWarning("Something went wrong: {}", e);
                 response = req.CreateResponse(HttpStatusCode.BadRequest);
             }
-            logger.LogInformation("Order processed for {}", data?.Customer);
+            logger.LogInformation("Order processed for {}", orderJson?.Customer);
             return new OrderResponse() {
-                Messages = [data != null ? JsonSerializer.Serialize(data) : "Invalid data"],
+                Messages = [orderJson != null ? JsonSerializer.Serialize(orderJson) : "Invalid data"],
                 HttpResponse = response
             };
         }

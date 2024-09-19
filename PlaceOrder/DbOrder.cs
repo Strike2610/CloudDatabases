@@ -9,8 +9,8 @@ namespace PlaceOrder {
         public ETag ETag { get; set; }
         public int Product { get; init; }
         public required string Customer { get; init; }
-        public DateTimeOffset OrderDate { get; set; }
+        public required string Address { get; init; }
+        public DateTimeOffset OrderDate { get; init; }
         public DateTimeOffset? ShipDate { get; set; }
-        public required string Address { get; set; }
     }
 }
