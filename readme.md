@@ -19,6 +19,7 @@ In the repo above, make a table called `orders`.
 }
 ```
 2. call `/order/ship` with a plain text body containing the queue's message id, which is posted in the log.
+
 example: `ed27bef9-5aea-4885-ad24-ce6a988a9acf`
 
 ## Assignment
