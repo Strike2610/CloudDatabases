@@ -14,6 +14,7 @@ namespace PlaceOrder {
 
             var enteredData = JsonSerializer.Deserialize<OrderItem>(message.Body.ToString());
             logger.LogInformation("Order saved: {}", message.MessageId);
+#pragma warning disable CS8602 // Dereference of a possibly null reference. Irrelevant due to only internal data being used.
             return new DbOrder() {
                 PartitionKey = "Ordered",
                 RowKey = Guid.NewGuid().ToString(),
@@ -23,6 +24,7 @@ namespace PlaceOrder {
                 OrderDate = message.InsertedOn ?? DateTimeOffset.MinValue,
                 ShipDate = null
             };
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 }
