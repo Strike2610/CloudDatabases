@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 namespace PlaceOrder {
     public class OrderResponse {
         [QueueOutput("placed-orders")]
-        public string[] Messages { get; set; }
-        public HttpResponseData HttpResponse { get; set; }
+        public required string[] Messages { get; set; }
+        public required HttpResponseData HttpResponse { get; set; }
     }
 }
