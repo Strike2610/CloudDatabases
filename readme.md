@@ -10,7 +10,7 @@ In the repo above, make a table called `orders`.
 
 ## Usage
 
-Running `PlaceOrder` runs all projects.
+Running `ShipOrder` runs all projects.
 
 1. call `/order/place` with the following json body:
 ```json
