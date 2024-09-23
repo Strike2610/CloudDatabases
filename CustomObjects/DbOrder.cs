@@ -1,7 +1,7 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 
-namespace PlaceOrder {
+namespace CustomObjects {
     public record DbOrder : ITableEntity {
         public required string PartitionKey { get; set; }
         public required string RowKey { get; set; }

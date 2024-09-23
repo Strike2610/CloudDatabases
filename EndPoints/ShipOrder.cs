@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using PlaceOrder;
 using System.Net;
 using System.Text.Json;
+using CustomObjects;
 
-namespace ShipOrder {
+namespace EndPoints {
     public class ShipOrder {
         [Function(nameof(ShipOrder))]
         public static async Task<ShippedResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/ship")] HttpRequestData req, [TableInput("orders", "Ordered")] IEnumerable<DbOrder> orders, FunctionContext context) {

@@ -3,8 +3,9 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
+using CustomObjects;
 
-namespace PlaceOrder {
+namespace EndPoints {
     public class PlaceOrder {
         [Function(nameof(PlaceOrder))]
         public static async Task<OrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/place")] HttpRequestData req, FunctionContext context) {

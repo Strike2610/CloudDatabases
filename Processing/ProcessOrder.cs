@@ -3,8 +3,9 @@ using Azure.Data.Tables;
 using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using CustomObjects;
 
-namespace PlaceOrder {
+namespace QueueProcessing {
     public class ProcessOrder {
         [Function(nameof(ProcessOrder))]
         [TableOutput("orders")]
