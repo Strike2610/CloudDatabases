@@ -26,7 +26,7 @@ example: `ed27bef9-5aea-4885-ad24-ce6a988a9acf`
 
 ## Assignment
 
-This Repo contains the (work in progress) of the following assignment:
+This Repo contains (the work in progress of) the following assignment:
 
 Widget and Co – product widget - have decided to transfer their website from a local ISP hosting company to the cloud. The site has become very popular during the past few years and can experience heavy loads at peak hours. It is suggested that the move to Azure could alleviate some of the occurring problems.
 
