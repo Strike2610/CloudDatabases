@@ -10,6 +10,7 @@ namespace QueueProcessing {
         [Function(nameof(ProcessOrder))]
         [TableOutput("orders")]
         public TableEntity? Run([QueueTrigger("placed-orders")] QueueMessage message, FunctionContext context) {
+
             if(message.Body.ToString() == "Invalid data") return null;
             var logger = context.GetLogger(nameof(ProcessOrder));
 

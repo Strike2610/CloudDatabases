@@ -6,37 +6,50 @@ using Microsoft.Extensions.Logging;
 using CustomObjects;
 
 namespace QueueProcessing {
-    public class ProcessShipment {
+    public class ProcessShipment(ILoggerFactory loggerFactory) {
+        private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessShipment>();
+
         [Function(nameof(ProcessShipment))]
-        public async Task Run([QueueTrigger("shipped-orders")] QueueMessage message, FunctionContext context) {
-            var logger = context.GetLogger(nameof(ProcessShipment));
+        public async Task Run([QueueTrigger("shipped-orders")] QueueMessage message) {
+
             TableEntity? order = null;
 
             var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
             var tableClient = new TableClient(connectionString, "orders");
-            var orderData = JsonSerializer.Deserialize<ITableEntity>(message.Body.ToString());
+            var orderData = JsonSerializer.Deserialize<DbOrder>(message.Body);
 
             if(orderData == null) {
-                logger.LogError("Order data is null, cannot process shipment.");
+                _logger.LogError("Order data is null, cannot process shipment.");
                 return;
             }
+
             try {
                 order = await tableClient.GetEntityAsync<TableEntity>(orderData.PartitionKey, orderData.RowKey);
-                logger.LogInformation("Order found: {}", order.RowKey);
+                _logger.LogInformation("Order found: {}", order.RowKey);
             } catch(Exception e) {
-                logger.LogWarning("Order not found: {}", e);
+                _logger.LogWarning(e, "Order not found");
             }
 
             if(order == null) {
-                logger.LogError("Order is null, cannot process shipment.");
+                _logger.LogError("Order is null, cannot process shipment.");
                 return;
             }
             order["ShipDate"] = message.InsertedOn ?? DateTimeOffset.MinValue;
-            order["OrderProcessed "] = message.InsertedOn - (DateTimeOffset)order["OrderDate"];
+            if(order.TryGetValue("OrderDate", out var orderDateObj) && orderDateObj != null) {
+                order["OrderProcessed"] = message.InsertedOn?.Subtract(DateTimeOffset.Parse(orderDateObj.ToString()));
+            } else {
+                _logger.LogError("OrderDate is null, cannot process shipment.");
+                return;
+            }
             order.PartitionKey = "Shipped";
             await tableClient.DeleteEntityAsync("Ordered", order.RowKey);
             await tableClient.AddEntityAsync(order);
-            logger.LogInformation("Order shipped: {}", message.MessageId);
+            _logger.LogInformation("Order shipped: {}", message.MessageId);
+        }
+
+        public void LogError(string message) {
+            _logger.LogError(message);
+            throw new Exception(message);
         }
     }
 }

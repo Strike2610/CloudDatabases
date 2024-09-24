@@ -1,4 +1,3 @@
-using Azure;
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
@@ -8,29 +7,30 @@ using Microsoft.Extensions.Logging;
 using CustomObjects;
 
 namespace EndPoints {
-    public class GetProduct {
+    public class GetProduct(ILoggerFactory loggerFactory) {
+        private readonly ILogger _logger = loggerFactory.CreateLogger<GetProduct>();
+
         [Function(nameof(GetProduct))]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "products/{id:int}")] HttpRequest req, int? id, FunctionContext context) {
-            var logger = context.GetLogger(nameof(GetProduct));
-            Product product;
+        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "products/{id:int}")] HttpRequest req, int? id) {
+            DbProduct dbProduct;
 
             var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
             var blobClient = new BlobContainerClient(connectionString, "product-thumbnails");
             var tableClient = new TableClient(connectionString, "catalogue");
 
             try {
-                var productResponse = await tableClient.GetEntityAsync<Product>("Product", id.ToString());
-                product = productResponse.Value;
+                var productResponse = await tableClient.GetEntityAsync<DbProduct>("Product", id.ToString());
+                dbProduct = productResponse.Value;
             } catch(Exception e) {
-                logger.LogError(e, "Error getting product with id {}", id);
+                _logger.LogError(e, "Error getting product with id {}", id);
                 return new NotFoundResult();
             }
 
-            logger.LogInformation(blobClient.Uri.ToString());
-
-            //blobClient.GetBlobClient(product.Thumbnail.ToString()).DownloadTo(Response.Body);
-
-            return new OkObjectResult(product);
+            return new OkObjectResult(new Dictionary<string, object>() {
+                {"Thumbnail", blobClient.Uri + dbProduct.Thumbnail.ToString() + ".jpeg"},
+                {"Name", dbProduct.Name},
+                {"Price", dbProduct.Price}
+            });
         }
     }
 }
