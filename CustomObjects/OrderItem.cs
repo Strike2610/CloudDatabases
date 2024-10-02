@@ -1,4 +1,4 @@
-﻿namespace CustomObjects;
+﻿namespace EntityFramework;
 
 public class OrderItem {
     public int Product { get; set; }

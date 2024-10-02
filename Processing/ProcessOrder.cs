@@ -1,35 +1,34 @@
 using System.Text.Json;
-using Azure.Data.Tables;
 using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Functions.Worker;
+using EntityFramework;
 using Microsoft.Extensions.Logging;
-using CustomObjects;
 
-namespace QueueProcessing {
-    public class ProcessOrder {
-        [Function(nameof(ProcessOrder))]
-        [TableOutput("orders")]
-        public TableEntity? Run([QueueTrigger("placed-orders")] QueueMessage message, FunctionContext context) {
+namespace QueueProcessing;
 
-            if(message.Body.ToString() == "Invalid data") return null;
-            var logger = context.GetLogger(nameof(ProcessOrder));
+public class ProcessOrder(CloudDbContext database, ILoggerFactory loggerFactory) {
+    private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessOrder>();
 
-            var enteredData = JsonSerializer.Deserialize<OrderItem>(message.Body.ToString());
-            if(enteredData == null) {
-                logger.LogError("Deserialization failed for message: {}", message.MessageId);
-                return null;
-            }
+    [Function(nameof(ProcessOrder))]
+    public void Run([QueueTrigger("placed-orders")] QueueMessage message) {
+        var enteredData = JsonSerializer.Deserialize<OrderItem>(message.Body.ToString())!;
 
-            logger.LogInformation("Order saved: {}", message.MessageId);
+        var newCustomer = new Customer() {
+            Name = enteredData.Customer,
+            Address = enteredData.Address
+        };
+        var customer = database.Customers.FirstOrDefault(customer => customer.Name == newCustomer.Name && customer.Address == newCustomer.Address, newCustomer);
+        if(customer == newCustomer) database.Customers.Add(customer);
 
-            var order = new TableEntity("Ordered", message.MessageId) {
-                    {"Product", enteredData.Product},
-                    {"Customer", enteredData.Customer},
-                    {"Address", enteredData.Address},
-                    {"OrderDate", message.InsertedOn ?? DateTimeOffset.MinValue},
-                    {"ShipDate", null}
-                };
-            return order;
-        }
+        var order = new Order() {
+            Product = enteredData.Product,
+            CustomerId = customer.Id,
+            OrderDate = message.InsertedOn ?? DateTimeOffset.MinValue
+        };
+
+        database.Orders.Add(order);
+        database.SaveChanges();
+
+        _logger.LogInformation("Order placed:  {}", order.Id);
     }
 }

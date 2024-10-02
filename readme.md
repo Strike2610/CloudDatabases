@@ -2,27 +2,46 @@
 
 ## Installation
 
-For some reason adding a table through Azure functions doesn't work.
+This project utilized Azurite so use Azure Storage Explorer for easy access to the data.
 
-`Emulator & Attached > Storage Accounts > (Emulator - Default Ports) (Key) > Tables`
+`Emulator & Attached > Storage Accounts > (Emulator - Default Ports) (Key) > Blob`
 
-In the repo above, make a table called `orders`.
+In the location above, make a table called `product-thumbnails`.
+Dump the images in `/images` in this blob for everything to function as it should.
 
 ## Usage
 
-Running `ShipOrder` runs all projects.
+There are 2 relevant projects to run:
+1. `EndPoints`: as a user, these are the endpoints that can be called for various functionalities.
+2. `QueueProcessing`: for the user this doesn't do anything, but it contains all internal workings for the functioning.
 
-1. call `/order/place` with the following json body:
+Neither project requires the other to function, but full functionality will require the other project as they work in tandem.
+
+Below, each end point is explained with usage.
+This project also contains an insomnia export for easy usage.
+Though the port of this may have to be changed in the enviroment variables as localhost can change this.
+
+### Get Product Info `/products/{id}`
+
+An endpoint to get information on the items available as well as links to a respective thumbnail.
+Currently the daabase contains 3 items and a valid ID therefor is 1-3.
+
+### Place Order `/orders/place`
+
+By posting a JSON body like below, an order can be input in the system.
+
 ```json
 {
 	"Product": 1,
-	"Customer": "Billy Bob",
-	"Address": "Sesame Street 123"
+	"Customer": "John Doe",
+	"Address": "Whiteacre"
 }
 ```
-2. call `/order/ship` with a plain text body containing the queue's message id, which is posted in the log.
 
-example: `ed27bef9-5aea-4885-ad24-ce6a988a9acf`
+### Ship Order `/orders/ship/{id}`
+
+This endpoint checks if the provided order exists and if so, attempts to ship it.
+As the ID of an order generated within the application, it is posted in the logs when an order is processed.
 
 ## Assignment
 

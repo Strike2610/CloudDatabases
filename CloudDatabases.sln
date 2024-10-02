@@ -8,11 +8,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EndPoints", "EndPoints\EndPoints.csproj", "{D9724C18-830E-4A68-BD79-92E468393D06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndPoints", "EndPoints\EndPoints.csproj", "{D9724C18-830E-4A68-BD79-92E468393D06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueueProcessing", "Processing\QueueProcessing.csproj", "{46F41254-68B3-4B35-A98E-E7ED40C3D9B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueueProcessing", "Processing\QueueProcessing.csproj", "{46F41254-68B3-4B35-A98E-E7ED40C3D9B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomObjects", "CustomObjects\CustomObjects.csproj", "{B696622D-17B6-44D2-B31B-935C082A6A6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework", "CustomObjects\EntityFramework.csproj", "{B696622D-17B6-44D2-B31B-935C082A6A6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

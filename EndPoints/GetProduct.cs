@@ -1,36 +1,34 @@
-using Azure.Data.Tables;
+using System.Net;
 using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using EntityFramework;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using CustomObjects;
 
-namespace EndPoints {
-    public class GetProduct(ILoggerFactory loggerFactory) {
-        private readonly ILogger _logger = loggerFactory.CreateLogger<GetProduct>();
+namespace EndPoints;
 
-        [Function(nameof(GetProduct))]
-        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "products/{id:int}")] HttpRequest req, int? id) {
-            DbProduct dbProduct;
+public class GetProduct(CloudDbContext database, ILoggerFactory logger) {
+    private readonly ILogger _logger = logger.CreateLogger<GetProduct>();
 
-            var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
-            var blobClient = new BlobContainerClient(connectionString, "product-thumbnails");
-            var tableClient = new TableClient(connectionString, "catalogue");
-
-            try {
-                var productResponse = await tableClient.GetEntityAsync<DbProduct>("Product", id.ToString());
-                dbProduct = productResponse.Value;
-            } catch(Exception e) {
-                _logger.LogError(e, "Error getting product with id {}", id);
-                return new NotFoundResult();
-            }
-
-            return new OkObjectResult(new Dictionary<string, object>() {
-                {"Thumbnail", blobClient.Uri + dbProduct.Thumbnail.ToString() + ".jpeg"},
-                {"Name", dbProduct.Name},
-                {"Price", dbProduct.Price}
-            });
+    [Function(nameof(GetProduct))]
+    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "products/{id:int}")] HttpRequestData req, int? id) {
+        var blobClient = new BlobContainerClient(Environment.GetEnvironmentVariable("AzureWebJobsStorage"), "product-thumbnails");
+        Product product;
+        try {
+            product = database.Products.First(product => product.Id == id);
+        } catch(Exception e) {
+            _logger.LogWarning(e.Message);
+            return req.CreateResponse(HttpStatusCode.BadRequest);
         }
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(new Dictionary<string, object> {
+            {"Thumbnail", blobClient.Uri.AbsoluteUri + product.Thumbnail},
+            {"Name", product.Name},
+            {"Price", product.Price}
+        });
+
+        return response;
     }
 }
