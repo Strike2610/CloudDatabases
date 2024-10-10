@@ -1,10 +1,10 @@
 using Azure.Storage.Queues.Models;
+using DAL;
 using Microsoft.Azure.Functions.Worker;
-using EntityFramework;
 
-namespace QueueProcessing;
+namespace CloudDatabases.Controller;
 
-public class ProcessShipment(CloudDbContext database) {
+public class ProcessShipment(CloudContext database) {
     [Function(nameof(ProcessShipment))]
     public void Run([QueueTrigger("shipped-orders")] QueueMessage message) {
         var orderId = int.Parse(message.Body.ToString());

@@ -1,4 +1,4 @@
-﻿namespace EntityFramework;
+﻿namespace Domain;
 
 public class OrderItem {
     public int Product { get; set; }

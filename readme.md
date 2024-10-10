@@ -9,17 +9,12 @@ This project utilized Azurite so use Azure Storage Explorer for easy access to t
 In the location above, make a table called `product-thumbnails`.
 Dump the images in `/images` in this blob for everything to function as it should.
 
+It is also important to open the Package Manager Console and run `Update-Database` to create the database.
+
 ## Usage
 
-There are 2 relevant projects to run:
-1. `EndPoints`: as a user, these are the endpoints that can be called for various functionalities.
-2. `QueueProcessing`: for the user this doesn't do anything, but it contains all internal workings for the functioning.
-
-Neither project requires the other to function, but full functionality will require the other project as they work in tandem.
-
 Below, each end point is explained with usage.
-This project also contains an insomnia export for easy usage.
-Though the port of this may have to be changed in the enviroment variables as localhost can change this.
+This project contains an insomnia export for easy usage.
 
 ### Get Product Info `/products/{id}`
 

@@ -2,26 +2,30 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using System.Text.Json;
-using EntityFramework;
+using Domain;
 
-namespace EndPoints;
+namespace CloudDatabases.View;
 
 public class PlaceOrder {
     [Function(nameof(PlaceOrder))]
     public async Task<PlaceOrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/place")] HttpRequestData req) {
         var orderData = await new StreamReader(req.Body).ReadToEndAsync();
-
         var order = JsonSerializer.Deserialize<OrderItem>(orderData);
-        if(order == null) return new PlaceOrderResponse {
-            Messages = "Your order could not be processed",
-            HttpResponse = req.CreateResponse(HttpStatusCode.BadRequest)
-        };
 
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(order);
+        var responseCode = HttpStatusCode.OK;
+        var responseMessage = JsonSerializer.Serialize(order);
+        var writable = JsonSerializer.Serialize(order);
 
+        if(order == null) {
+            responseCode = HttpStatusCode.BadRequest;
+            responseMessage = "Your order could not be processed";
+            writable = "";
+        }
+
+        var response = req.CreateResponse(responseCode);
+        await response.WriteStringAsync(responseMessage);
         return new PlaceOrderResponse {
-            Messages = JsonSerializer.Serialize(order),
+            QueuedMessages = writable,
             HttpResponse = response
         };
     }
@@ -29,6 +33,6 @@ public class PlaceOrder {
 
 public class PlaceOrderResponse {
     [QueueOutput("placed-orders")]
-    public required string Messages { get; set; }
+    public required string QueuedMessages { get; set; }
     public required HttpResponseData HttpResponse { get; set; }
 }

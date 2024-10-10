@@ -1,14 +1,14 @@
 using System.Net;
 using Azure.Storage.Blobs;
+using DAL;
+using Domain;
 using Microsoft.Azure.Functions.Worker;
-using EntityFramework;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace EndPoints;
+namespace CloudDatabases.View;
 
-public class GetProduct(CloudDbContext database, ILoggerFactory logger) {
+public class GetProduct(CloudContext database, ILoggerFactory logger) {
     private readonly ILogger _logger = logger.CreateLogger<GetProduct>();
 
     [Function(nameof(GetProduct))]

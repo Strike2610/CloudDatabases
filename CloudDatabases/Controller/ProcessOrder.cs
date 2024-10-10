@@ -1,12 +1,13 @@
 using System.Text.Json;
 using Azure.Storage.Queues.Models;
+using DAL;
+using Domain;
 using Microsoft.Azure.Functions.Worker;
-using EntityFramework;
 using Microsoft.Extensions.Logging;
 
-namespace QueueProcessing;
+namespace CloudDatabases.Controller;
 
-public class ProcessOrder(CloudDbContext database, ILoggerFactory loggerFactory) {
+public class ProcessOrder(CloudContext database, ILoggerFactory loggerFactory) {
     private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessOrder>();
 
     [Function(nameof(ProcessOrder))]
@@ -17,14 +18,19 @@ public class ProcessOrder(CloudDbContext database, ILoggerFactory loggerFactory)
             Name = enteredData.Customer,
             Address = enteredData.Address
         };
-        var customer = database.Customers.FirstOrDefault(customer => customer.Name == newCustomer.Name && customer.Address == newCustomer.Address, newCustomer);
-        if(customer == newCustomer) database.Customers.Add(customer);
+        var customer = database.Customers.AsEnumerable().FirstOrDefault(customer => customer.Name == newCustomer.Name && customer.Address == newCustomer.Address, newCustomer);
+        if(customer == newCustomer) {
+            database.Customers.Add(customer);
+            database.SaveChanges();
+        }
 
         var order = new Order() {
-            Product = enteredData.Product,
+            ProductId = enteredData.Product,
             CustomerId = customer.Id,
             OrderDate = message.InsertedOn ?? DateTimeOffset.MinValue
         };
+
+        _logger.LogInformation("{} {}", customer.Id, order.Id);
 
         database.Orders.Add(order);
         database.SaveChanges();
