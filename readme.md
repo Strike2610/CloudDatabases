@@ -6,20 +6,20 @@ This project utilized Azurite so use Azure Storage Explorer for easy access to t
 
 `Emulator & Attached > Storage Accounts > (Emulator - Default Ports) (Key) > Blob`
 
-In the location above, make a table called `product-thumbnails`.
+In the location above, make a table called `product-thumbnails`.\
 Dump the images in `/images` in this blob for everything to function as it should.
 
 It is also important to open the Package Manager Console and run `Update-Database` to create the database.
 
 ## Usage
 
-Below, each end point is explained with usage.
+Below, each end point is explained with usage.\
 This project contains an insomnia export for easy usage.
 
 ### Get Product Info `/products/{id}`
 
-An endpoint to get information on the items available as well as links to a respective thumbnail.
-Currently the daabase contains 3 items and a valid ID therefor is 1-3.
+An endpoint to get information on the items available as well as links to a respective thumbnail.\
+Currently the database contains 3 items and a valid ID therefor is 1-3.
 
 ### Place Order `/orders/place`
 
@@ -35,7 +35,7 @@ By posting a JSON body like below, an order can be input in the system.
 
 ### Ship Order `/orders/ship/{id}`
 
-This endpoint checks if the provided order exists and if so, attempts to ship it.
+This endpoint checks if the provided order exists and if so, attempts to ship it.\
 As the ID of an order generated within the application, it is posted in the logs when an order is processed.
 
 ### Post Comment `/comments/{id}`
