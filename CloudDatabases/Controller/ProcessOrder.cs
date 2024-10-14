@@ -3,13 +3,10 @@ using Azure.Storage.Queues.Models;
 using DAL;
 using Domain;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace CloudDatabases.Controller;
 
-public class ProcessOrder(CloudContext database, ILoggerFactory loggerFactory) {
-    private readonly ILogger _logger = loggerFactory.CreateLogger<ProcessOrder>();
-
+public class ProcessOrder(CloudContext database) {
     [Function(nameof(ProcessOrder))]
     public void Run([QueueTrigger("placed-orders")] QueueMessage message) {
         var enteredData = JsonSerializer.Deserialize<OrderItem>(message.Body.ToString())!;
@@ -30,11 +27,7 @@ public class ProcessOrder(CloudContext database, ILoggerFactory loggerFactory) {
             OrderDate = message.InsertedOn ?? DateTimeOffset.MinValue
         };
 
-        _logger.LogInformation("{} {}", customer.Id, order.Id);
-
         database.Orders.Add(order);
         database.SaveChanges();
-
-        _logger.LogInformation("Order placed:  {}", order.Id);
     }
 }

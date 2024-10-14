@@ -22,13 +22,38 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Customer", b =>
+            modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("PostDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -41,18 +66,37 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Jedi Temple",
+                            Name = "Anakin Skywalker"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Privet Drive 4",
+                            Name = "Harry Potter"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Bag End",
+                            Name = "Bilbo Baggins"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CustomerId")
-                        .IsRequired()
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("OrderDate")
@@ -61,8 +105,7 @@ namespace DAL.Migrations
                     b.Property<TimeSpan>("OrderProcessed")
                         .HasColumnType("time");
 
-                    b.Property<int?>("ProductId")
-                        .IsRequired()
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("ShipDate")
@@ -75,15 +118,71 @@ namespace DAL.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CustomerId = 1,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 9, 28, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2392), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 0, 0, 0, 0),
+                            ProductId = 3,
+                            ShipDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CustomerId = 2,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 10, 4, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2459), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 0, 0, 0, 0),
+                            ProductId = 1,
+                            ShipDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CustomerId = 3,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 8, 9, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2462), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 0, 0, 0, 0),
+                            ProductId = 2,
+                            ShipDate = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CustomerId = 1,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 8, 24, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2465), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 10, 0, 0, 0),
+                            ProductId = 1,
+                            ShipDate = new DateTimeOffset(new DateTime(2024, 8, 24, 23, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2467), new TimeSpan(0, 2, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CustomerId = 2,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 7, 14, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2472), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 11, 0, 0, 0),
+                            ProductId = 2,
+                            ShipDate = new DateTimeOffset(new DateTime(2024, 7, 15, 0, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2474), new TimeSpan(0, 2, 0, 0, 0))
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CustomerId = 3,
+                            OrderDate = new DateTimeOffset(new DateTime(2024, 7, 12, 13, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2478), new TimeSpan(0, 2, 0, 0, 0)),
+                            OrderProcessed = new TimeSpan(0, 23, 0, 0, 0),
+                            ProductId = 3,
+                            ShipDate = new DateTimeOffset(new DateTime(2024, 7, 13, 12, 9, 21, 746, DateTimeKind.Unspecified).AddTicks(2480), new TimeSpan(0, 2, 0, 0, 0))
+                        });
                 });
 
             modelBuilder.Entity("Domain.Product", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -100,6 +199,40 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Lightsaber",
+                            Price = 200m,
+                            Thumbnail = "bf4084e2-c63d-4a26-a1f8-29585d107b33.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Wand",
+                            Price = 5m,
+                            Thumbnail = "b2ac5f77-a354-47f0-a69d-69a01c268385.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Ring",
+                            Price = 999m,
+                            Thumbnail = "236eb394-4170-4e3a-ad68-20bd9c592ddf.jpg"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.HasOne("Domain.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -124,6 +257,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("Domain.Customer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Domain.Product", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,6 @@ using DAL;
 namespace CloudDatabases.View;
 
 public class ShipOrder(CloudContext database) {
-
     [Function(nameof(ShipOrder))]
     public async Task<ShippedOrderResponse> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "order/ship/{id:int}")] HttpRequestData req, int id) {
         var responseCode = HttpStatusCode.OK;

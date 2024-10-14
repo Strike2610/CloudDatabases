@@ -9,15 +9,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DAL.Migrations
-{
+namespace DAL.Migrations {
     [DbContext(typeof(CloudContext))]
     [Migration("Initial")]
-    partial class Initial
-    {
+    partial class Initial {
         /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
+        protected override void BuildTargetModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.10")
@@ -25,109 +22,140 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Customer", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            modelBuilder.Entity("Domain.Comment", b => {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Content")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<DateTimeOffset>("PostDate")
+                    .HasColumnType("datetimeoffset");
 
-                    b.HasKey("Id");
+                b.Property<int>("ProductId")
+                    .HasColumnType("int");
 
-                    b.ToTable("Customers");
-                });
+                b.HasKey("Id");
 
-            modelBuilder.Entity("Domain.Order", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                b.HasIndex("ProductId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                b.ToTable("Comments");
+            });
 
-                    b.Property<int?>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("int");
+            modelBuilder.Entity("Domain.Customer", b => {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("OrderDate")
-                        .HasColumnType("datetimeoffset");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("OrderProcessed")
-                        .HasColumnType("time");
+                b.Property<string>("Address")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("int");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("ShipDate")
-                        .HasColumnType("datetimeoffset");
+                b.HasKey("Id");
 
-                    b.HasKey("Id");
+                b.ToTable("Customers");
+            });
 
-                    b.HasIndex("CustomerId");
+            modelBuilder.Entity("Domain.Order", b => {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.HasIndex("ProductId");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.ToTable("Orders");
-                });
+                b.Property<int>("CustomerId")
+                    .HasColumnType("int");
 
-            modelBuilder.Entity("Domain.Product", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                b.Property<DateTimeOffset>("OrderDate")
+                    .HasColumnType("datetimeoffset");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                b.Property<TimeSpan>("OrderProcessed")
+                    .HasColumnType("time");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<int>("ProductId")
+                    .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
+                b.Property<DateTimeOffset>("ShipDate")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Thumbnail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.HasKey("Id");
 
-                    b.HasKey("Id");
+                b.HasIndex("CustomerId");
 
-                    b.ToTable("Products");
-                });
+                b.HasIndex("ProductId");
 
-            modelBuilder.Entity("Domain.Order", b =>
-                {
-                    b.HasOne("Domain.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.ToTable("Orders");
+            });
 
-                    b.HasOne("Domain.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("Domain.Product", b => {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    b.Navigation("Customer");
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Navigation("Product");
-                });
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity("Domain.Customer", b =>
-                {
-                    b.Navigation("Orders");
-                });
+                b.Property<decimal>("Price")
+                    .HasPrecision(8, 2)
+                    .HasColumnType("decimal(8,2)");
+
+                b.Property<string>("Thumbnail")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("Products");
+            });
+
+            modelBuilder.Entity("Domain.Comment", b => {
+                b.HasOne("Domain.Product", "Product")
+                    .WithMany("Comments")
+                    .HasForeignKey("ProductId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Product");
+            });
+
+            modelBuilder.Entity("Domain.Order", b => {
+                b.HasOne("Domain.Customer", "Customer")
+                    .WithMany("Orders")
+                    .HasForeignKey("CustomerId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("Domain.Product", "Product")
+                    .WithMany()
+                    .HasForeignKey("ProductId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Customer");
+
+                b.Navigation("Product");
+            });
+
+            modelBuilder.Entity("Domain.Customer", b => {
+                b.Navigation("Orders");
+            });
+
+            modelBuilder.Entity("Domain.Product", b => {
+                b.Navigation("Comments");
+            });
 #pragma warning restore 612, 618
         }
     }
