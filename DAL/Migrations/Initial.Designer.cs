@@ -80,7 +80,7 @@ namespace DAL.Migrations {
                     .HasColumnType("datetimeoffset");
 
                 b.Property<TimeSpan>("OrderProcessed")
-                    .HasColumnType("time");
+                    .HasColumnType("string");
 
                 b.Property<int>("ProductId")
                     .HasColumnType("int");

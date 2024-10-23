@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,12 +31,21 @@ namespace DAL.Migrations {
                 table: "Orders",
                 columns: ["Id", "CustomerId", "ProductId", "OrderDate", "ShipDate", "OrderProcessed"],
                 values: new object[,] {
-            { 1, 1, 3, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(16)), null, null},
-            { 2, 2, 1, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(10)), null, null},
-            { 3, 3, 2, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(66)), null, null},
-            { 4, 1, 1, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(51)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(51)).AddHours(10), TimeSpan.FromHours(10) },
-            { 5, 2, 2, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(92)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(92)).AddHours(11), TimeSpan.FromHours(11) },
-            { 6, 3, 3, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(94)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(94)).AddHours(23), TimeSpan.FromHours(23) }
+                    { 1, 1, 3, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(16)), null, null},
+                    { 2, 2, 1, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(10)), null, null},
+                    { 3, 3, 2, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(66)), null, null},
+                    { 4, 1, 1, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(51)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(23)), TimeSpan.FromDays(28) },
+                    { 5, 2, 2, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(92)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(47)), TimeSpan.FromDays(45) },
+                    { 6, 3, 3, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(94)), DateTimeOffset.Now.Subtract(TimeSpan.FromDays(58)), TimeSpan.FromDays(36) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: ["Id", "ProductId", "PostDate", "Content"],
+                values: new object[,] {
+                    { 1, 1, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(42)), "Works great against younglings!"},
+                    { 2, 2, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(17)), "What a rip off, I expected the elder wand."},
+                    { 3, 3, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(89)), "My precious..."}
                 });
         }
 
@@ -46,6 +54,7 @@ namespace DAL.Migrations {
             migrationBuilder.DeleteData("Orders", "Id", [1, 2, 3, 4, 5, 6]);
             migrationBuilder.DeleteData("Customers", "Id", [1, 2, 3]);
             migrationBuilder.DeleteData("Products", "Id", [1, 2, 3]);
+            migrationBuilder.DeleteData("Comments", "Id", [1, 2, 3]);
         }
     }
 }

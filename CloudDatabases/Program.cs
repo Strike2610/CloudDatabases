@@ -15,10 +15,8 @@ var host = new HostBuilder()
     .ConfigureServices(services => {
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
-        services.AddDbContext<CloudContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
-            );
+        services.AddDbContext<CloudContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
     })
-    .Build();
+        .Build();
 
 host.Run();

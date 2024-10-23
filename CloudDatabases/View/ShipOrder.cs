@@ -1,7 +1,7 @@
+using DAL;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
-using DAL;
 
 namespace CloudDatabases.View;
 
@@ -12,10 +12,10 @@ public class ShipOrder(CloudContext database) {
         var responseMessage = "Order Shipped";
         var writable = id.ToString();
 
-        if(!database.Orders.Any(order => order.Id == id)) {
+        if(!database.Orders.Any(order => order.Id == id && order.ShipDate == null)) {
             responseCode = HttpStatusCode.BadRequest;
-            responseMessage = "Order not found";
-            writable = "";
+            responseMessage = "Unable to ship order.";
+            writable = null;
         }
 
         var response = req.CreateResponse(responseCode);
@@ -29,6 +29,6 @@ public class ShipOrder(CloudContext database) {
 
 public class ShippedOrderResponse {
     [QueueOutput("shipped-orders")]
-    public string QueuedMessages { get; set; }
-    public HttpResponseData HttpResponse { get; set; }
+    public required string? QueuedMessages { get; set; }
+    public required HttpResponseData HttpResponse { get; set; }
 }
