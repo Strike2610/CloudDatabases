@@ -9,8 +9,8 @@ namespace CloudDatabases.Controller;
 public class ProcessOrder(CloudContext database) {
     [Function(nameof(ProcessOrder))]
     public async Task RunAsync([QueueTrigger("placed-orders")] QueueMessage message) {
-        var enteredData = JsonSerializer.Deserialize<OrderItem>(message.Body.ToString())!;
-        var newCustomer = new Customer {
+        var enteredData = JsonSerializer.Deserialize<IOrderDto>(message.Body.ToString())!;
+        ICustomer newCustomer = new Customer {
             Name = enteredData.Customer,
             Address = enteredData.Address
         };
@@ -18,7 +18,7 @@ public class ProcessOrder(CloudContext database) {
         if(customer == newCustomer) database.Customers.Add(customer);
         await database.SaveChangesAsync();
 
-        var order = new Order {
+        IOrder order = new Order {
             ProductId = enteredData.Product,
             CustomerId = customer.Id,
             OrderDate = message.InsertedOn ?? DateTimeOffset.MinValue

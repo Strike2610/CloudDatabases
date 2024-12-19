@@ -4,17 +4,17 @@ using Domain;
 namespace DAL;
 
 public class CloudContext(DbContextOptions<CloudContext> options) : DbContext(options) {
-    public DbSet<Customer> Customers { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Comment> Comments { get; set; }
+    public DbSet<ICustomer> Customers { get; set; }
+    public DbSet<IOrder> Orders { get; set; }
+    public DbSet<IProduct> Products { get; set; }
+    public DbSet<IComment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<Customer>(entity => {
+        modelBuilder.Entity<ICustomer>(entity => {
             entity.HasKey(customer => customer.Id);
         });
 
-        modelBuilder.Entity<Order>(entity => {
+        modelBuilder.Entity<IOrder>(entity => {
             entity.HasKey(order => order.Id);
             entity
                 .HasOne(order => order.Customer)
@@ -30,14 +30,14 @@ public class CloudContext(DbContextOptions<CloudContext> options) : DbContext(op
                 .HasColumnType("nvarchar(max)");
         });
 
-        modelBuilder.Entity<Product>(entity => {
+        modelBuilder.Entity<IProduct>(entity => {
             entity.HasKey(product => product.Id);
             entity
                 .Property(product => product.Price)
                 .HasPrecision(8, 2);
         });
 
-        modelBuilder.Entity<Comment>(entity => {
+        modelBuilder.Entity<IComment>(entity => {
             entity.HasKey(comment => comment.Id);
             entity
                 .HasOne(comment => comment.Product)

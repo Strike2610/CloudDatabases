@@ -1,8 +1,15 @@
 ﻿namespace Domain;
 
-public class Customer {
+public interface ICustomer {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+    public ICollection<IOrder> Orders { get; }
+}
+
+public class Customer : ICustomer {
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public required string Address { get; set; }
+    public ICollection<IOrder> Orders { get; } = new List<IOrder>();
 }
