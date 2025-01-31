@@ -8,11 +8,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudDatabases", "CloudDatabases\CloudDatabases.csproj", "{D9724C18-830E-4A68-BD79-92E468393D06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{D9724C18-830E-4A68-BD79-92E468393D06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{2772E619-639B-4AF4-B786-603D43D7B811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{2772E619-639B-4AF4-B786-603D43D7B811}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{2B49E20C-947B-40B0-B6B9-6982AB0E8691}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{D7F6CC54-EBDF-4301-9A5D-2978BA4B27F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{2B49E20C-947B-40B0-B6B9-6982AB0E8691}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B49E20C-947B-40B0-B6B9-6982AB0E8691}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B49E20C-947B-40B0-B6B9-6982AB0E8691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F6CC54-EBDF-4301-9A5D-2978BA4B27F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F6CC54-EBDF-4301-9A5D-2978BA4B27F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F6CC54-EBDF-4301-9A5D-2978BA4B27F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F6CC54-EBDF-4301-9A5D-2978BA4B27F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
