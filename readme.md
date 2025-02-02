@@ -26,7 +26,7 @@ By posting a JSON body like below, an order can be input in the system.
 
 ```json
 {
-	"Product": d649825a-c006-4d8c-9145-c6a74a6080e8,
+	"Product": "686512b2-a780-474c-8efd-7f5737267849",
 	"Customer": "Lara Croft",
 	"Address": "142 Abbingdon Road"
 }
