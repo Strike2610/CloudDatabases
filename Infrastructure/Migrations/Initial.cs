@@ -10,7 +10,7 @@ namespace Infrastructure.Migrations {
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -22,7 +22,7 @@ namespace Infrastructure.Migrations {
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
@@ -35,7 +35,7 @@ namespace Infrastructure.Migrations {
             migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PostDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -54,7 +54,7 @@ namespace Infrastructure.Migrations {
             migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ShipDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),

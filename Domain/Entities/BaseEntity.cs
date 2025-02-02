@@ -1,5 +1,7 @@
-﻿namespace Domain.Entities;
+﻿using Microsoft.WindowsAzure.Storage.Table;
 
-public abstract class BaseEntity {
+namespace Domain.Entities;
+
+public abstract class BaseEntity : TableEntity {
     public Guid Id { get; set; }
 }

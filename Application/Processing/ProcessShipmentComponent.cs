@@ -17,5 +17,6 @@ public class ProcessShipmentComponent(IOrderRepository orderRepository) : IProce
         order.ShipDate = message.InsertedOn ?? DateTimeOffset.MinValue;
         order.OrderProcessed = order.ShipDate!.Value.Subtract(order.OrderDate);
         await orderRepository.Update(order);
+        await orderRepository.SaveChanges();
     }
 }

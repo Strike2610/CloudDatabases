@@ -20,7 +20,11 @@ public class ProcessOrderComponent(ICustomerRepository customerRepository, IOrde
             Address = enteredData.Address
         };
 
-        if(customer == newCustomer) await customerRepository.Add(customer);
+        if (customer == newCustomer)
+        {
+            await customerRepository.Add(customer);
+            await customerRepository.SaveChanges();
+        }
 
         var order = new Order {
             ProductId = enteredData.Product,
@@ -29,5 +33,6 @@ public class ProcessOrderComponent(ICustomerRepository customerRepository, IOrde
         };
 
         await orderRepository.Add(order);
+        await orderRepository.SaveChanges();
     }
 }

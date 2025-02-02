@@ -18,7 +18,7 @@ This project contains an insomnia export for easy usage.
 ### Get Product Info `/products/{id}`
 
 An endpoint to get information on the items available as well as links to a respective thumbnail.\
-Currently the database contains 3 items and a valid ID therefor is 1-3.
+Currently the database contains 3 items and a valid ID are generated on migration.
 
 ### Place Order `/orders/place`
 
@@ -26,7 +26,7 @@ By posting a JSON body like below, an order can be input in the system.
 
 ```json
 {
-	"Product": 1,
+	"Product": d649825a-c006-4d8c-9145-c6a74a6080e8,
 	"Customer": "Lara Croft",
 	"Address": "142 Abbingdon Road"
 }

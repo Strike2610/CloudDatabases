@@ -1,4 +1,5 @@
-﻿using Azure.Storage.Queues.Models;
+﻿using System.Globalization;
+using Azure.Storage.Queues.Models;
 using Domain.Entities;
 using Domain.Interfaces;
 using System.Text.Json;
@@ -14,5 +15,6 @@ public class StoreCommentComponent(ICommentRepository commentRepository) : IStor
         var commentData = JsonSerializer.Deserialize<Comment>(message.Body.ToString())!;
         commentData.PostDate = message.InsertedOn ?? DateTimeOffset.MinValue;
         await commentRepository.Add(commentData);
+        await commentRepository.SaveChanges();
     }
 }
